@@ -1,0 +1,8 @@
+{
+  "name": "fiscal",
+  "version": "1.0.0",
+  "description": "Calendario fiscal AEAT, revisión de declaraciones (IRPF, IS, IVA), consultas tributarias con referencia a normativa y consultas de la DGT, y triaje de procedimientos tributarios.",
+  "author": {
+    "name": "Claude para Abogados (España)"
+  }
+}

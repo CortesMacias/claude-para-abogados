@@ -1,0 +1,8 @@
+{
+  "name": "administrativo",
+  "version": "1.0.0",
+  "description": "Procedimiento administrativo (plazos, silencio, recursos), contratación pública (LCSP) y contencioso-administrativo (LJCA) adaptados a la legislación española.",
+  "author": {
+    "name": "Claude para Abogados (España)"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "propiedad-intelectual",
+  "version": "1.0.0",
+  "description": "Búsqueda de marcas (OEPM/EUIPO), requerimientos extrajudiciales, revisión de licencias OSS, triaje de infracciones, cláusulas de PI en contratos y gestión de portfolio de registros.",
+  "author": {
+    "name": "Claude para Abogados (España)"
+  }
+}

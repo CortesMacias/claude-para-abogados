@@ -1,0 +1,8 @@
+{
+  "name": "inmobiliario",
+  "version": "1.0.0",
+  "description": "Revisión de contratos de arrendamiento (LAU), compraventa inmobiliaria, propiedad horizontal (LPH) y operaciones inmobiliarias bajo derecho español.",
+  "author": {
+    "name": "Claude para Abogados (España)"
+  }
+}

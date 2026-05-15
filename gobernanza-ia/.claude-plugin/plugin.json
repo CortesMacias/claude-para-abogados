@@ -1,0 +1,8 @@
+{
+  "name": "gobernanza-ia",
+  "version": "1.0.0",
+  "description": "Triaje de casos de uso de IA según EU AI Act, evaluaciones de impacto de IA, revisión de cláusulas de IA en contratos con proveedores y análisis de gaps regulatorios de inteligencia artificial.",
+  "author": {
+    "name": "Claude para Abogados (España)"
+  }
+}

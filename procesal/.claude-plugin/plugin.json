@@ -1,0 +1,8 @@
+{
+  "name": "procesal",
+  "version": "1.0.0",
+  "description": "Gestión de portfolio de asuntos judiciales, intake de casos, cronologías, plazos procesales (LEC, LECrim, LJCA), demandas, requerimientos y briefings para reuniones con cliente o socio.",
+  "author": {
+    "name": "Claude para Abogados (España)"
+  }
+}

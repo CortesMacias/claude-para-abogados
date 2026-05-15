@@ -1,82 +1,40 @@
-# Contributing to Claude for Legal
+# Contribuir a Claude para Abogados (España)
 
-Notes for anyone writing or editing a plugin in this repo. Keep this short — the
-design principles that matter most for the quality of the output, not a style
-guide.
+Notas para cualquiera que escriba o edite un plugin en este repositorio. Breve — los principios de diseño que más importan para la calidad del resultado, no una guía de estilo.
 
-## Before your first PR
+## Principio de diseño: SKILL.md codifica el comportamiento correcto; las guardarraíles de CLAUDE.md son la red de seguridad
 
-Sign the CLA. The first time you open a pull request, the CLA Assistant bot will
-comment with a link to the [CLA](CLA.md) and ask you to confirm. Reply with
-`I have read the CLA Document and I hereby sign the CLA` and the check will pass.
-You only need to do this once.
+Cada plugin en este repositorio tiene dos capas de instrucción:
 
-## Design principle: SKILL.md encodes the right behavior; CLAUDE.md guardrails
-are the net
+1. **`<plugin>/skills/<skill>/SKILL.md`** — lo que este skill específico hace, paso a paso. El andamiaje estrecho y específico de la tarea.
+2. **`<plugin>/CLAUDE.md`** — las guardarraíles compartidas y el perfil de práctica. Disciplina de citas, verificación de hechos jurídicos, comprobación de premisas, severidad mínima entre skills. La red de seguridad amplia a nivel de plugin.
 
-Every plugin in this repo ships with two layers of instruction:
+**Si el resultado correcto de un skill depende de que una guardarraíl de CLAUDE.md atrape un error que el SKILL.md habría cometido, eso es un defecto de diseño.** El SKILL.md debería decirle al modelo qué hacer directamente; las guardarraíles deberían atrapar lo que el SKILL.md no previó. Cada vez que una guardarraíl tiene que rescatar un skill, dependemos de que se active consistentemente — y en una ejecución mala, un modelo menos capaz, un prompt más escueto, o un futuro editor que solo lea el texto del skill, el rescate no ocurre.
 
-1. **`<plugin>/skills/<skill>/SKILL.md`** — what this specific skill does, step by
-   step. The narrow, task-specific scaffold.
-2. **`<plugin>/CLAUDE.md`** — the shared guardrails and the practice profile.
-   "Scaffolding, not blinders," source-tag discipline, "verify user-stated legal
-   facts," premise verification, destination check, cross-skill severity floor,
-   pre-flight citation banner. The wide, plugin-level safety net.
+**Regla práctica: si un test de QA pasa solo porque una guardarraíl se activó, añade el comportamiento al SKILL.md directamente.** La guardarraíl se queda (cinturón y tirantes), pero el skill ahora lleva el conocimiento que necesita por sí solo.
 
-**If a skill's correct output depends on a CLAUDE.md guardrail catching a
-mistake the SKILL.md would have made, that's a design smell.** The SKILL.md
-should tell the model what to do directly; the guardrails should catch what the
-SKILL.md missed. Every time a guardrail has to rescue a skill, we're relying on
-the guardrail firing consistently — and on a bad run, a weaker model, a terser
-prompt, or a future editor who reads only the skill text, the rescue doesn't
-happen.
+Ejemplos de esta regla en la práctica:
 
-**Rule of thumb: if a QA test passes only because a guardrail fired, add the
-behavior to the SKILL.md directly.** The guardrail stays (belt and suspenders),
-but the skill now carries the knowledge it needs on its own.
+- Una consulta sobre marca denominativa no debería pasar un triaje de infracción solo porque la guardarraíl general permite al modelo salirse del flujo de marca figurativa. El skill debería ramificar según el tipo de marca y aplicar el test de confusión correcto.
+- Un plazo procesal que cae en sábado no debería calcularse correctamente solo porque el usuario pensó en preguntar por días hábiles. El skill de plazos debería llevar la regla de días hábiles (LEC art.130-136, agosto inhábil) incorporada en cada respuesta.
+- Un cálculo de indemnización por despido no debería acertar la fórmula solo porque el modelo recuerda el art.56 ET. El skill debería tener un checklist que fuerce los días por año según tipo de despido, el tope de mensualidades, la transición pre/post-2012, y el salario regulador en cada respuesta.
 
-Examples of this rule in practice:
+## Algunas cosas concretas que se derivan
 
-- A design patent question should not pass an infringement triage only because
-  "Scaffolding, not blinders" lets the model override the utility-patent
-  workflow. The skill should branch on the D-prefix itself and route to the
-  ordinary-observer test.
-- A renewal cancel-by date that falls on a Sunday should not land on the user's
-  calendar correctly only because the user thought to ask about weekdays. The
-  register schema and the Mode 2 output should carry the business-day roll-back
-  themselves.
-- An FLSA back-pay computation should not get the regular-rate formula right
-  only because the model happens to remember §207(e). The skill should have a
-  §207(e) checklist that forces the inclusions, the 0.5× vs. 1.5× posture, the
-  liquidated-damages doubling, and the SOL lookback into every answer.
+- **Pon la doctrina en el skill.** Si un skill cubre despidos, cubre los tres tipos (objetivo, disciplinario, colectivo). Si cubre plazos, cubre la regla de agosto inhábil. No un puntero a "y además piensa en" — el checklist real.
+- **Adjunta etiquetas de procedencia a los números, no a los párrafos.** `[cálculo del modelo — verificar contra la cláusula]` junto a la cifra; `[verificar — consultar con laboralista antes de comunicar]` en la línea donde aparece la indemnización. Las etiquetas en la prosa circundante se pierden; las etiquetas en el dato crítico no.
+- **Haz que la vía de rechazo sea un andamiaje, no una vía de escape.** Si la respuesta correcta a alguna categoría de pregunta es "no calculo esto", incorpóralo al skill como una puerta dura. La regla de no-calcular de `/clinica:plazos` es el patrón: declarada claramente, no sobreescribible, propiedad del skill.
+- **Escribe la cabecera de la puerta de forma que la puerta esté activada por defecto.** Si hay una excepción, formula el título como la puerta y estrecha la excepción en un sub-punto, no al revés.
 
-## A few concrete things that follow
+## Notas de flujo de trabajo
 
-- **Put the doctrine in the skill.** If a skill's mode covers patents, cover
-  design patents. If it covers overtime, cover the regular-rate formula. Not a
-  pointer to "and also think about" — the actual checklist.
-- **Attach provenance tags to numbers, not to paragraphs.** `[model calculation
-  — verify against the notice clause]` next to the date; `[verify — consult
-  wage-and-hour counsel before asserting or paying]` on the line the back-pay
-  number appears. Tags on surrounding prose get lost; tags on the load-bearing
-  digit do not.
-- **Make the decline pathway a scaffold, not an escape hatch.** If the right
-  answer to some category of question is "I decline to compute," bake that into
-  the skill as a hard gate. `legal-clinic`'s `/deadlines` do-not-compute rule is
-  the pattern: stated plainly, non-overridable, owned by the skill.
-- **Write the gate header so the gate is default-on.** If there is an
-  exemption, phrase the heading as the gate and narrow the exemption in a
-  sub-bullet, not the other way around. A load-bearing parenthetical is a bug
-  waiting to be reintroduced by the next edit.
+- **Lee el `CLAUDE.md` del plugin antes de editar cualquier skill de ese plugin.** El perfil de práctica, la tabla de integraciones, las guardarraíles compartidas y la declaración de postura de decisión moldean lo que el skill debe decir y omitir.
+- **Incrementa la versión del plugin en un cambio material.** Patch para adiciones de comportamiento; minor para nuevos skills o nuevos inputs requeridos.
+- **Ejecuta los validadores.** `scripts/validate.py` y `scripts/lint-tool-scope.py` comprueban las invariantes estructurales de las que depende el cargador de plugins.
+- **No elimines las guardarraíles compartidas de CLAUDE.md.** La red se queda. El objetivo es un skill que no necesite la red, no un plugin sin ella.
 
-## Workflow notes
+## Idioma
 
-- **Read the plugin's `CLAUDE.md` before editing any skill in that plugin.** The
-  practice profile, the integrations table, the shared guardrails, and the
-  decision-posture statement all shape what the skill should say and omit.
-- **Bump the plugin version on a material change.** Patch bumps for behavior
-  additions; minor bumps for new skills or new required inputs.
-- **Run the validators.** `scripts/validate.py` and `scripts/lint-tool-scope.py`
-  check the structural invariants the plugin loader depends on.
-- **Do not remove the shared guardrails from CLAUDE.md.** The net stays. The
-  goal is a skill that doesn't need the net, not a plugin without one.
+- Todo el contenido orientado al usuario debe estar en **castellano** (español de España).
+- Las referencias legislativas deben incluir el nombre completo de la ley y los artículos relevantes.
+- Usar siempre acentos correctos (á, é, í, ó, ú, ñ).

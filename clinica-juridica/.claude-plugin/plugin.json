@@ -1,0 +1,8 @@
+{
+  "name": "clinica-juridica",
+  "version": "1.0.0",
+  "description": "Intake de clientes, memos de caso con estructura IRAC, hojas de ruta de investigación, seguimiento de plazos y correspondencia con clientes para clínicas jurídicas y turno de oficio.",
+  "author": {
+    "name": "Claude para Abogados (España)"
+  }
+}

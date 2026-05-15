@@ -1,66 +1,56 @@
-# Adding a Connector
+# Añadir un conector
 
-The plugins are at their best when connected to authoritative sources. If you build or operate a legal data source, research tool, CLM, DMS, eDiscovery platform, or practice management system, we want your MCP connector in the suite.
+Los plugins funcionan mejor cuando están conectados a fuentes autorizadas. Si construyes u operas una fuente de datos jurídicos, herramienta de investigación, CLM, gestor documental, plataforma de eDiscovery o sistema de gestión de despacho, queremos tu conector MCP en la suite.
 
-## What makes a good legal MCP connector
+## Qué hace un buen conector jurídico MCP
 
-- **Remote MCP server over HTTPS** with OAuth or API-key auth (streamable HTTP or SSE transport)
-- **Read-heavy tools** — search, fetch, list. Write tools (create, send, file) need an explicit confirmation prompt on the client side; say so in your tool descriptions.
-- **Provenance in results** — return the source, date retrieved, and a citation-ready identifier. The plugins tag every cite by source; your connector should make that possible.
-- **No instruction-like content in results** — the plugins treat retrieved content as data, not commands. If your tool results include metadata or system notes, mark them clearly so they don't look like embedded directives.
-- **Rate limits and errors that degrade gracefully** — the plugins have a fallback for when a connector isn't responding; a clean error is better than a timeout.
+- **Servidor MCP remoto sobre HTTPS** con OAuth o API key (transporte streamable HTTP o SSE)
+- **Herramientas orientadas a lectura** — buscar, consultar, listar. Las herramientas de escritura (crear, enviar, presentar) necesitan un prompt de confirmación explícito en el cliente; indícalo en las descripciones de tus herramientas.
+- **Procedencia en los resultados** — devuelve la fuente, fecha de consulta e identificador listo para citar. Los plugins etiquetan cada cita por fuente; tu conector debería hacerlo posible.
+- **Sin contenido tipo instrucción en los resultados** — los plugins tratan el contenido recuperado como datos, no como comandos. Si tus resultados incluyen metadatos o notas del sistema, márcalos claramente para que no parezcan directivas embebidas.
+- **Límites de tasa y errores que degradan gracefully** — los plugins tienen un fallback para cuando un conector no responde; un error limpio es mejor que un timeout.
 
-## How to submit
+## Cómo contribuir
 
-1. Publish your MCP server and document its tools, auth flow, and data coverage.
-2. Open a PR adding your server to the relevant plugin's `.mcp.json` with the URL, auth method, and a one-line description of what it gives Claude.
-3. Include a note on which practice areas / plugins it's most useful for.
-4. We'll test against the plugin workflows and merge. Connectors that pass the retrieval-quality and injection-resistance checks go in the default `.mcp.json`; others get documented in the plugin README for users to add themselves.
+1. Publica tu servidor MCP y documenta sus herramientas, flujo de autenticación y cobertura de datos.
+2. Abre un PR añadiendo tu servidor al `.mcp.json` del plugin relevante con la URL, método de autenticación y una descripción de una línea de lo que aporta a Claude.
+3. Incluye una nota sobre para qué áreas de práctica / plugins es más útil.
+4. Testearemos contra los flujos del plugin y haremos merge. Los conectores que pasen las comprobaciones de calidad de recuperación y resistencia a inyección van en el `.mcp.json` por defecto; los demás se documentan en el README del plugin para que los usuarios los añadan.
 
-## Current connectors
+## Conectores actuales
 
-Connectors shipped in the default `.mcp.json` of each plugin:
+Conectores incluidos en el `.mcp.json` por defecto de cada plugin:
 
-| Connector | Plugins |
+| Conector | Plugins |
 |---|---|
-| **Slack** | all 12 |
-| **Google Drive** (`gdrive`) | all 12 |
-| **CourtListener** | legal-clinic, ip-legal, litigation-legal, law-student |
-| **Descrybe** | legal-clinic, ip-legal, law-student |
-| **Definely** | commercial-legal, corporate-legal |
-| **iManage** | commercial-legal, corporate-legal |
-| **Solve Intelligence** | corporate-legal, ip-legal |
-| **TopCounsel** | commercial-legal, corporate-legal, litigation-legal |
-| **Box** | corporate-legal |
-| **Ironclad** | commercial-legal |
-| **DocuSign / DocuSign CLM** | commercial-legal |
-| **Everlaw** | litigation-legal |
-| **Trellis** | litigation-legal |
-| **Aurora** | litigation-legal |
-| **Courtroom5** | legal-clinic |
-| **Lawve AI** | legal-builder-hub |
-| **Linear** | product-legal |
-| **Atlassian (Jira)** | product-legal |
-| **Asana** | product-legal |
+| **Slack** | todos |
+| **Google Drive** (`gdrive`) | todos |
+| **CENDOJ** (jurisprudencia) | procesal, clinica-juridica, estudiante-derecho |
+| **BOE** (legislación) | regulatorio, fiscal, administrativo, laboral |
+| **EUR-Lex** (normativa UE) | privacidad, gobernanza-ia, regulatorio, consumo |
+| **AEPD** (resoluciones) | privacidad, proteccion-datos |
+| **Registro Mercantil** | societario, mercantil, concursal |
+| **OEPM** (marcas/patentes) | propiedad-intelectual |
+| **LexNET** (notificaciones judiciales) | procesal, clinica-juridica |
+| **AEAT** (calendario fiscal) | fiscal, startups |
 
-See the `.mcp.json` in each plugin directory for the authoritative list.
+Consulta el `.mcp.json` de cada directorio de plugin para la lista completa.
 
-## Wanted connectors
+## Conectores deseados
 
-These would make specific plugins significantly more useful. If you build or operate one, see "How to submit" above.
+Estos harían plugins específicos significativamente más útiles. Si construyes u operas uno, consulta "Cómo contribuir" arriba.
 
-- **IP management systems** (Anaqua, Clarivate IPfolio, AppColl, Patrix, Alt Legal, FoundationIP) — full docket sync for `ip-legal` portfolio tracking
-- **USPTO by customer number** — full portfolio status and deadlines, not just per-application lookup
-- **USPTO TSDR / Trademark Status** — trademark status and deadlines for `ip-legal` brand management
-- **Jira / Linear / Asana for OSS requests** — `ip-legal` OSS clearance can monitor and respond to incoming tickets
-- **Thomson Reuters** (CoCounsel, Practical Law, Westlaw) — research and drafting for every plugin
-- **SS&C Intralinks / Datasite** — VDR access for `corporate-legal` diligence
-- **Relativity / Everlaw beyond read** — eDiscovery workflow for `litigation-legal`
-- **State bar CLE trackers** — `law-student` bar prep
-- **Court e-filing systems** (PACER write, state e-filing) — with a hard irreversibility gate, obviously
-- **Global AI Regulation Tracker** (techieray.com/GlobalAIRegulationTracker) — jurisdiction-tagged AI regulation tracking with structured API. Curated, verified, multi-jurisdiction. Would be a primary-source-adjacent feed for `ai-governance-legal` and `regulatory-legal`.
-- **Regulatory primary sources** — a connector to official registers (eCFR, Federal Register, EUR-Lex, legislation.gov.uk, Federal Register of Legislation AU, Singapore Statutes Online) that bypasses the agent-blockers many legislative sites use. A curated regulatory knowledge base would be a high-value addition.
+- **Bases de datos de jurisprudencia** (Aranzadi/Thomson Reuters, La Ley/Wolters Kluwer, vLex, Tirant Lo Blanch) — investigación y doctrina para todos los plugins
+- **Gestores de despacho** (Lex-ON, Kleos, Nemesis, Sage Despachos, AGORA) — gestión de expedientes para `procesal`, `mercantil`, `laboral`
+- **CLM y firma electrónica** (Ironclad, DocuSign, Signaturit, Lleida.net) — ciclo de vida de contratos para `mercantil`
+- **Registros públicos** (Registro de la Propiedad, Catastro) — información inmobiliaria para `inmobiliario`
+- **Plataformas de contratación pública** (PLACE, plataformas autonómicas) — licitaciones para `administrativo`
+- **Registro Público Concursal** — procedimientos concursales para `concursal`
+- **EUIPO / OMPI** — marcas y diseños comunitarios/internacionales para `propiedad-intelectual`
+- **DGT Consultas Vinculantes** — doctrina tributaria para `fiscal`
+- **CGPJ / Poder Judicial** — estadísticas y tablas orientadoras para `familia`, `procesal`
+- **Tracker de Regulación de IA** (Global AI Regulation Tracker) — seguimiento de regulación de IA para `gobernanza-ia` y `regulatorio`
 
-## Questions
+## Preguntas
 
-Open an issue on this repo. For partnership or integration questions, see the contact on each plugin's README.
+Abre un issue en este repositorio.

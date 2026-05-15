@@ -1,0 +1,8 @@
+{
+  "name": "concursal",
+  "version": "1.0.0",
+  "description": "Diagnóstico de insolvencia, planes de reestructuración y calificación de créditos bajo el Texto Refundido de la Ley Concursal (TRLC).",
+  "author": {
+    "name": "Claude para Abogados (España)"
+  }
+}

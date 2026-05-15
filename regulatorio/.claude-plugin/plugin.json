@@ -1,0 +1,8 @@
+{
+  "name": "regulatorio",
+  "version": "1.0.0",
+  "description": "Vigilancia de normativa (BOE, DOUE, boletines autonómicos), comparación de cambios normativos contra políticas internas, seguimiento de gaps y redacción de propuestas de actualización de políticas.",
+  "author": {
+    "name": "Claude para Abogados (España)"
+  }
+}

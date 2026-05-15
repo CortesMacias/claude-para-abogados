@@ -1,75 +1,83 @@
-# Quick Start
+# Inicio Rápido
 
-**60 seconds.** This gets you to using your plugins.
+**60 segundos.** Esto te lleva a usar los plugins.
 
-## Install in Claude Cowork
-1. [Install Claude Desktop](https://claude.com/download)
-2. Get access to Claude Cowork
-3. Follow the instructions in the video below:
+## Instalar en Claude Cowork
+
+1. [Instala Claude Desktop](https://claude.com/download)
+2. Obtén acceso a Claude Cowork
+3. Sigue las instrucciones del vídeo:
 
 https://github.com/user-attachments/assets/51394f0a-5277-4fe2-b81c-5c5e9ac876b5
 
-## Install in Claude Code
+## Instalar en Claude Code
 
-1. **Open Claude Code** (in your terminal) or **Claude Cowork** (the desktop app). Not sure which you have? If you have a terminal window open with Claude in it, that's Claude Code.
+1. **Abre Claude Code** (en tu terminal) o **Claude Cowork** (la app de escritorio). ¿No sabes cuál tienes? Si tienes una ventana de terminal con Claude, eso es Claude Code.
 
-2. **Add the marketplace.** In Claude Code, type `/plugin marketplace add ` (with a space at the end), then **drag the unzipped `claude-for-legal` folder onto the terminal window** — it'll fill in the path. Then press Enter.
+2. **Añade el marketplace.** En Claude Code, escribe `/plugin marketplace add ` (con un espacio al final), luego **arrastra la carpeta `claude-para-abogados` descomprimida a la ventana del terminal** — rellenará la ruta. Pulsa Enter.
 
-   (Or type the full path: `/plugin marketplace add /Users/you/Desktop/claude-for-legal`)
+   (O escribe la ruta completa: `/plugin marketplace add /Users/tu/Desktop/claude-para-abogados`)
 
-3. **Install your plugin.** Pick the one that matches your work from the table below, then:
+3. **Instala tu plugin.** Elige el que encaje con tu trabajo de la tabla de abajo:
    ```
-   /plugin install privacy-legal@claude-for-legal
-   ```
-
-4. **⚠️ Restart Claude Code.** Close and reopen. This step is not optional — the plugin isn't live until you restart.
-
-5. **Run setup.** Takes 2 minutes (quick start) or 10-15 minutes (full).
-   ```
-   /privacy-legal:cold-start-interview
+   /plugin install mercantil@claude-para-abogados
    ```
 
-6. **Connect a research tool.** Citations are flagged unverified without one. In Cowork: Settings → Connectors → add CourtListener. In Claude Code: the plugin already lists the research MCP in its config; you'll be prompted to authorize it the first time a skill needs it.
+4. **⚠️ Reinicia Claude Code.** Cierra y vuelve a abrir. Este paso no es opcional — el plugin no estará activo hasta que reinicies.
 
-## Install user-scoped, not project-scoped
+5. **Ejecuta la configuración.** 2 minutos (rápida) o 10-15 minutos (completa).
+   ```
+   /mercantil:entrevista-inicial
+   ```
 
-When you run `/plugin install`, you may be asked whether to install for this project only or for all projects (user scope). **Pick user scope.**
+6. **Conecta una herramienta de investigación.** Las citas se marcan como no verificadas sin ella. En Cowork: Ajustes → Conectores. En Claude Code: el plugin ya lista el MCP de investigación en su configuración; se te pedirá autorización la primera vez que un skill lo necesite.
 
-It's counterintuitive: project scope feels safer. But project scope blocks the plugin from reading files outside the project folder — your outlines in Downloads, your contract in Documents, your client file in Dropbox. Most skills need to read your files. User scope doesn't give the plugin any extra access to your files — the plugin can only read files you explicitly point it at or that are in the current directory. It just means the plugin works from any folder instead of one.
+## Instalar con alcance de usuario, no de proyecto
 
-If you already installed project-scoped and want to switch: `/plugin uninstall <plugin>`, then `/plugin install <plugin>@claude-for-legal` from your home directory.
+Cuando ejecutes `/plugin install`, se te puede preguntar si instalar solo para este proyecto o para todos (alcance de usuario). **Elige alcance de usuario.**
 
-## Which plugin is for me?
+Es contraintuitivo: el alcance de proyecto parece más seguro. Pero el alcance de proyecto bloquea al plugin para leer archivos fuera de la carpeta del proyecto — tus documentos en Descargas, tu contrato en Documentos, tu expediente en Dropbox. La mayoría de skills necesitan leer tus archivos. El alcance de usuario no da al plugin acceso extra — solo puede leer archivos que tú le señales explícitamente o que estén en el directorio actual. Simplemente significa que el plugin funciona desde cualquier carpeta.
 
-| You are a… | Install… | First command |
+Si ya instalaste con alcance de proyecto y quieres cambiar: `/plugin uninstall <plugin>`, luego `/plugin install <plugin>@claude-para-abogados` desde tu directorio home.
+
+## ¿Qué plugin es para mí?
+
+| Eres... | Instala... | Primer comando |
 |---|---|---|
-| Privacy lawyer / DPO | `privacy-legal` | `/privacy-legal:use-case-triage` |
-| Commercial / contracts lawyer | `commercial-legal` | `/commercial-legal:review` |
-| Corporate / M&A lawyer | `corporate-legal` | `/corporate-legal:diligence-issue-extraction` |
-| Employment lawyer / HR counsel | `employment-legal` | `/employment-legal:wage-hour-qa` |
-| Product counsel | `product-legal` | `/product-legal:is-this-a-problem` |
-| IP lawyer / patent agent | `ip-legal` | `/ip-legal:clearance` |
-| Litigator (in-house or firm) | `litigation-legal` | `/litigation-legal:matter-intake` |
-| Regulatory / compliance counsel | `regulatory-legal` | `/regulatory-legal:reg-feed-watcher` |
-| AI governance lead | `ai-governance-legal` | `/ai-governance-legal:use-case-triage` |
-| Clinic supervisor (law school) | `legal-clinic` | `/legal-clinic:cold-start-interview` |
-| Law student | `law-student` | `/law-student:cold-start-interview` |
-| Legal ops / looking for skills | `legal-builder-hub` | `/legal-builder-hub:registry-browser` |
+| Abogado mercantilista / contratos | `mercantil` | `/mercantil:revision` |
+| Abogado societario / M&A | `societario` | `/societario:revision-tabular` |
+| Abogado laboralista / RRHH | `laboral` | `/laboral:consulta` |
+| Abogado de PI / marcas | `propiedad-intelectual` | `/pi:busqueda-marca` |
+| Abogado procesalista / litigios | `procesal` | `/procesal:intake` |
+| Abogado de privacidad / DPD | `privacidad` | `/privacidad:triaje` |
+| Abogado de consumo / producto | `consumo` | `/consumo:consulta` |
+| Compliance / regulatorio | `regulatorio` | `/regulatorio:alertas` |
+| Gobernanza de IA | `gobernanza-ia` | `/gobernanza-ia:triaje` |
+| Abogado fiscalista | `fiscal` | `/fiscal:consulta` |
+| Abogado administrativista | `administrativo` | `/administrativo:procedimiento` |
+| Abogado inmobiliario | `inmobiliario` | `/inmobiliario:arrendamiento` |
+| Abogado concursalista | `concursal` | `/concursal:diagnostico` |
+| Abogado de familia | `familia` | `/familia:convenio` |
+| DPD / protección de datos | `proteccion-datos` | `/proteccion-datos:rat` |
+| Abogado de startups / fundador | `startups` | `/startups:constitucion` |
+| Supervisor de clínica jurídica | `clinica-juridica` | `/clinica:intake` |
+| Estudiante de Derecho | `estudiante-derecho` | `/estudiante:socratico` |
+| Legal ops / buscando skills | `hub-constructor` | `/hub-constructor:entrevista-inicial` |
 
-## What you're installing
+## Qué estás instalando
 
-Each plugin learns your playbook through a setup interview, writes it to a practice profile file (`~/.claude/plugins/config/claude-for-legal/<plugin>/CLAUDE.md`), and every skill reads from it. The profile is yours — edit it, re-run setup, or tell a skill to update it.
+Cada plugin aprende tu playbook a través de una entrevista de configuración, lo escribe en un archivo de perfil de práctica (`~/.claude/plugins/config/claude-para-abogados/<plugin>/CLAUDE.md`), y cada skill lee de él. El perfil es tuyo — edítalo, repite la configuración, o dile a un skill que lo actualice.
 
-**Every output is a draft for attorney review.** The plugins flag what they're unsure about, mark citations by source, and gate anything irreversible. A lawyer reviews, verifies, and takes responsibility. They make that review faster; they don't replace it.
+**Todo resultado es un borrador para revisión profesional.** Los plugins señalan lo que no están seguros, marcan las citas por fuente y bloquean cualquier acción irreversible. Un abogado revisa, verifica y asume la responsabilidad. Hacen esa revisión más rápida; no la sustituyen.
 
-## What's in the box
+## Qué incluye
 
-12 practice-area plugins, 5 managed-agent cookbooks, 16+ connectors. The full reference is in [README.md](README.md).
+20 plugins por área de práctica, recetas de agentes programados y conectores. La referencia completa está en [README.md](README.md).
 
-## Stuck?
+## ¿Problemas?
 
-- **"Command not found"** after install → you forgot step 4. Restart Claude Code.
-- **"Run setup first"** → run `/<plugin>:cold-start-interview` before any other command.
-- **Citations flagged `[verify]`** → connect a research tool (step 6). Without one, every cite is from training data, not a current database.
-- **"I can't read [file]"** → most often this means the plugin is project-scoped and the file is outside the project folder. See "Install user-scoped, not project-scoped" above — reinstall user-scoped or move the file into the project folder.
-- **The plugin doesn't do X** → run `/legal-builder-hub:related-skills-surfacer` to find a better match, or check the plugin's README for "What this plugin does not do."
+- **"Comando no encontrado"** tras instalar → olvidaste el paso 4. Reinicia Claude Code.
+- **"Ejecuta la configuración primero"** → ejecuta `/<plugin>:entrevista-inicial` antes de cualquier otro comando.
+- **Citas marcadas `[verificar]`** → conecta una herramienta de investigación (paso 6). Sin ella, cada cita viene de datos de entrenamiento, no de una base de datos actualizada.
+- **"No puedo leer [archivo]"** → normalmente significa que el plugin tiene alcance de proyecto y el archivo está fuera de la carpeta. Ver "Instalar con alcance de usuario" arriba — reinstala con alcance de usuario o mueve el archivo a la carpeta del proyecto.
+- **El plugin no hace X** → ejecuta `/hub-constructor:entrevista-inicial` para encontrar algo mejor, o consulta el README del plugin para "Lo que este plugin no hace".
