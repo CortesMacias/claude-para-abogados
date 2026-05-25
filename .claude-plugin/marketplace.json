@@ -1,0 +1,190 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude-para-abogados",
+  "description": "Agentes, skills y conectores de referencia para los flujos de trabajo juridicos mas habituales en Espana: mercantil, societario, laboral, propiedad intelectual, procesal, privacidad, consumo, regulatorio, gobernanza de IA, fiscal, administrativo, inmobiliario, concursal, familia, proteccion de datos, startups, clinica juridica y estudiantes de Derecho. Adaptacion al derecho espanol de claude-for-legal de Anthropic.",
+  "owner": {
+    "name": "Claude para Abogados (Espana)"
+  },
+  "plugins": [
+    {
+      "name": "mercantil",
+      "displayName": "Mercantil",
+      "source": "./mercantil",
+      "description": "Revisa contratos mercantiles, NDAs y suscripciones SaaS contra tu playbook de compras o ventas, rastrea renovaciones y vencimientos, deriva escalados al aprobador correcto y genera resumenes para stakeholders de negocio.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "societario",
+      "displayName": "Societario",
+      "source": "./societario",
+      "description": "Due diligence en operaciones de M&A, gobierno corporativo, cumplimiento registral, gestion de entidades societarias y acuerdos del organo de administracion adaptados al derecho espanol (LSC, Registro Mercantil, CNMV).",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "laboral",
+      "displayName": "Laboral",
+      "source": "./laboral",
+      "description": "Revision de contratos de trabajo y despidos, clasificacion de relacion laboral, politicas de empresa y consultas laborales adaptadas al Estatuto de los Trabajadores, convenios colectivos y legislacion laboral espanola.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "propiedad-intelectual",
+      "displayName": "Propiedad Intelectual",
+      "source": "./propiedad-intelectual",
+      "description": "Busqueda de marcas (OEPM/EUIPO), requerimientos extrajudiciales, revision de licencias OSS, triaje de infracciones, clausulas de PI en contratos y gestion de portfolio de registros.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "procesal",
+      "displayName": "Procesal",
+      "source": "./procesal",
+      "description": "Gestion de portfolio de asuntos judiciales, intake de casos, cronologias, plazos procesales (LEC, LECrim, LJCA), demandas, requerimientos y briefings para reuniones con cliente o socio.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "privacidad",
+      "displayName": "Privacidad",
+      "source": "./privacidad",
+      "description": "Revision de encargos de tratamiento, respuesta a derechos ARCO-POL, generacion de EIPD, triaje de tratamientos y analisis de gaps regulatorios en proteccion de datos (RGPD, LOPDGDD, AEPD).",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "consumo",
+      "displayName": "Consumo",
+      "source": "./consumo",
+      "description": "Revision de lanzamientos de producto, verificacion de claims de marketing, analisis de condiciones generales de contratacion y consultas rapidas de riesgo de consumo (LGDCU, LCD, directivas UE).",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "regulatorio",
+      "displayName": "Regulatorio",
+      "source": "./regulatorio",
+      "description": "Vigilancia de normativa (BOE, DOUE, boletines autonomicos), comparacion de cambios normativos contra politicas internas, seguimiento de gaps y redaccion de propuestas de actualizacion de politicas.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "gobernanza-ia",
+      "displayName": "Gobernanza IA",
+      "source": "./gobernanza-ia",
+      "description": "Triaje de casos de uso de IA segun EU AI Act, evaluaciones de impacto de IA, revision de clausulas de IA en contratos con proveedores y analisis de gaps regulatorios de inteligencia artificial.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "fiscal",
+      "displayName": "Fiscal",
+      "source": "./fiscal",
+      "description": "Calendario fiscal AEAT, revision de declaraciones (IRPF, IS, IVA), consultas tributarias con referencia a normativa y consultas de la DGT, y triaje de procedimientos tributarios.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "administrativo",
+      "displayName": "Administrativo",
+      "source": "./administrativo",
+      "description": "Procedimiento administrativo (plazos, silencio, recursos), contratacion publica (LCSP) y contencioso-administrativo (LJCA) adaptados a la legislacion espanola.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "inmobiliario",
+      "displayName": "Inmobiliario",
+      "source": "./inmobiliario",
+      "description": "Revision de contratos de arrendamiento (LAU), compraventa inmobiliaria, propiedad horizontal (LPH) y operaciones inmobiliarias bajo derecho espanol.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "concursal",
+      "displayName": "Concursal",
+      "source": "./concursal",
+      "description": "Diagnostico de insolvencia, planes de reestructuracion y calificacion de creditos bajo el Texto Refundido de la Ley Concursal (TRLC).",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "familia",
+      "displayName": "Familia",
+      "source": "./familia",
+      "description": "Convenios reguladores, regimen economico matrimonial, pensiones de alimentos y compensatorias bajo el Codigo Civil y la LEC.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "proteccion-datos",
+      "displayName": "Proteccion de Datos",
+      "source": "./proteccion-datos",
+      "description": "Registro de actividades de tratamiento, evaluaciones de impacto operativas, gestion de brechas de seguridad y relacion con la AEPD (RGPD, LOPDGDD, guias AEPD, ENS).",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "startups",
+      "displayName": "Startups",
+      "source": "./startups",
+      "description": "Constitucion de SL, pactos de socios, stock options y phantom shares, rondas de inversion, incentivos fiscales y primeras contrataciones bajo la Ley de Startups y legislacion espanola.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "clinica-juridica",
+      "displayName": "Clinica Juridica",
+      "source": "./clinica-juridica",
+      "description": "Intake de clientes, memos de caso con estructura IRAC, hojas de ruta de investigacion, seguimiento de plazos y correspondencia con clientes para clinicas juridicas y turno de oficio.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "estudiante-derecho",
+      "displayName": "Estudiante de Derecho",
+      "source": "./estudiante-derecho",
+      "description": "Metodo socratico, evaluacion IRAC, esquemas de estudio, preparacion de oposiciones, examen de acceso a la abogacia, fichas de estudio y planificacion academica.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "hub-constructor",
+      "displayName": "Hub Constructor",
+      "source": "./hub-constructor",
+      "description": "Descubrimiento, instalacion y evaluacion de skills comunitarios con verificacion de confianza y control de calidad.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    },
+    {
+      "name": "recetas-agentes",
+      "displayName": "Recetas de Agentes",
+      "source": "./recetas-agentes",
+      "description": "Cookbooks de agentes programados para flujos de trabajo juridicos recurrentes: vigilancia de renovaciones, seguimiento de expedientes, alertas regulatorias.",
+      "author": {
+        "name": "Claude para Abogados (Espana)"
+      }
+    }
+  ]
+}
