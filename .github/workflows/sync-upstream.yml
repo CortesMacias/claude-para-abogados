@@ -1,0 +1,117 @@
+name: Sync fork with upstream
+
+# ============================================================================
+# Workflow automatico de sincronizacion fork - upstream
+# ----------------------------------------------------------------------------
+# Destinatario: CortesMacias/claude-para-abogados (fork)
+# Upstream:     betobetico/claude-para-abogados (repo original adaptado)
+# Que hace:
+#   1. Cada lunes 06:00 UTC, fetchea upstream/main.
+#   2. Si hay novedades, intenta fast-forward merge sobre origin/main.
+#   3. Si el merge es limpio, hace push y crea un issue de notificacion.
+#   4. Si el merge no se puede hacer en fast-forward (divergencia), falla
+#      con error explicito. GitHub envia correo del fallo automaticamente.
+# Que NO hace:
+#   - No fuerza merges con conflictos (--ff-only obliga a fast-forward).
+#   - No reescribe historia.
+#   - No toca otras ramas distintas de main.
+# Politica: respeta la disciplina del historial (Seccion 1.4 prompt Unidad 16).
+# ============================================================================
+
+on:
+  schedule:
+    # Cada lunes a las 06:00 UTC. En horario peninsular espanol:
+    #   verano (CEST, UTC+2): 08:00
+    #   invierno (CET,  UTC+1): 07:00
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    # Permite lanzarlo manualmente desde la pestana Actions de GitHub.
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write    # necesario para hacer push al propio fork
+      issues: write      # necesario para crear el issue de notificacion
+    steps:
+      - name: Checkout fork (con historial completo)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configurar identidad Git del bot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Anadir remoto upstream
+        run: git remote add upstream https://github.com/betobetico/claude-para-abogados.git
+
+      - name: Fetch upstream
+        run: git fetch upstream
+
+      - name: Comparar HEAD del fork con HEAD del upstream
+        id: check
+        run: |
+          UPSTREAM_SHA=$(git rev-parse upstream/main)
+          LOCAL_SHA=$(git rev-parse origin/main)
+          echo "Upstream main: $UPSTREAM_SHA"
+          echo "Fork main:     $LOCAL_SHA"
+          if [ "$UPSTREAM_SHA" = "$LOCAL_SHA" ]; then
+            echo "needs_update=false" >> $GITHUB_OUTPUT
+            echo "Fork ya esta al dia. No hay accion."
+          else
+            echo "needs_update=true" >> $GITHUB_OUTPUT
+            echo "Upstream tiene commits nuevos. Procediendo a merge."
+          fi
+
+      - name: Fast-forward merge de upstream/main
+        if: steps.check.outputs.needs_update == 'true'
+        run: |
+          git checkout main
+          git merge --ff-only upstream/main || {
+            echo "::error::Fast-forward imposible. El fork ha divergido del upstream."
+            echo "::error::Esto ocurre si has hecho commits propios sobre main en el fork."
+            echo "::error::Intervencion manual requerida. Workflow detenido."
+            exit 1
+          }
+
+      - name: Push a origin
+        if: steps.check.outputs.needs_update == 'true'
+        run: git push origin main
+
+      - name: Crear issue de notificacion
+        if: steps.check.outputs.needs_update == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const date = new Date().toISOString().split('T')[0];
+            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Fork sincronizado con upstream - ${date}`,
+              body: [
+                `El workflow automatico ha sincronizado este fork con \`betobetico/claude-para-abogados\`.`,
+                ``,
+                `**Fecha de sincronizacion:** ${date}`,
+                `**Ejecucion del workflow:** ${runUrl}`,
+                ``,
+                `### Proximos pasos`,
+                ``,
+                `1. Cuando tu PC este disponible, ejecuta el script local de sync:`,
+                `   \`\`\`powershell`,
+                `   C:\\Repos\\sync-repos.ps1`,
+                `   \`\`\``,
+                `   O espera al lunes siguiente a las 09:00 (Task Scheduler lo ejecutara solo).`,
+                ``,
+                `2. Revisa los commits incorporados desde la ultima sincronizacion.`,
+                ``,
+                `3. Este issue puede cerrarse manualmente tras la verificacion.`,
+                ``,
+                `---`,
+                `*Notificacion automatica generada por \`.github/workflows/sync-upstream.yml\`.*`
+              ].join('\n'),
+              labels: ['sync-upstream', 'automated']
+            });
