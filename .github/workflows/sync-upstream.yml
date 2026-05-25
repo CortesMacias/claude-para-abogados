@@ -58,12 +58,18 @@ jobs:
           LOCAL_SHA=$(git rev-parse origin/main)
           echo "Upstream main: $UPSTREAM_SHA"
           echo "Fork main:     $LOCAL_SHA"
-          if [ "$UPSTREAM_SHA" = "$LOCAL_SHA" ]; then
-            echo "needs_update=false" >> $GITHUB_OUTPUT
-            echo "Fork ya esta al dia. No hay accion."
-          else
+          # Contar commits que existen en upstream/main pero NO en origin/main.
+          # Esto detecta solo cuando upstream tiene novedades reales, no cuando
+          # el fork tiene commits propios por delante (caso tipico: el propio
+          # workflow vive en el fork como commit local que el upstream no tiene).
+          COMMITS_AHEAD=$(git rev-list origin/main..upstream/main --count)
+          echo "Commits nuevos en upstream no presentes en origin: $COMMITS_AHEAD"
+          if [ "$COMMITS_AHEAD" -gt 0 ]; then
             echo "needs_update=true" >> $GITHUB_OUTPUT
-            echo "Upstream tiene commits nuevos. Procediendo a merge."
+            echo "Upstream tiene $COMMITS_AHEAD commits nuevos. Procediendo a merge."
+          else
+            echo "needs_update=false" >> $GITHUB_OUTPUT
+            echo "Fork ya esta al dia con upstream (o el fork va por delante). No hay accion."
           fi
 
       - name: Fast-forward merge de upstream/main
