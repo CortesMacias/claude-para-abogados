@@ -1,40 +1,35 @@
 name: Sync fork with upstream
 
 # ============================================================================
-# Workflow automatico de sincronizacion fork - upstream
+# Sincronizacion fork - upstream mediante Pull Request
 # ----------------------------------------------------------------------------
-# Destinatario: CortesMacias/claude-para-abogados (fork)
-# Upstream:     betobetico/claude-para-abogados (repo original adaptado)
-# Que hace:
-#   1. Cada lunes 06:00 UTC, fetchea upstream/main.
-#   2. Si hay novedades, intenta fast-forward merge sobre origin/main.
-#   3. Si el merge es limpio, hace push y crea un issue de notificacion.
-#   4. Si el merge no se puede hacer en fast-forward (divergencia), falla
-#      con error explicito. GitHub envia correo del fallo automaticamente.
-# Que NO hace:
-#   - No fuerza merges con conflictos (--ff-only obliga a fast-forward).
-#   - No reescribe historia.
-#   - No toca otras ramas distintas de main.
-# Politica: respeta la disciplina del historial (Seccion 1.4 prompt Unidad 16).
+# Fork:     CortesMacias/claude-para-abogados
+# Upstream: betobetico/claude-para-abogados
+#
+# Estrategia: en lugar de un merge --ff-only (que se rompe cuando el fork
+# tiene commits propios sobre main), este workflow abre un Pull Request con
+# las novedades del upstream. Ventajas:
+#   - El workflow vive en main (rama por defecto), por lo que el cron se ejecuta.
+#   - Nunca fuerza ni reescribe main; los commits propios se conservan.
+#   - Los cambios entrantes se revisan y fusionan de forma trazable.
+#   - Si hay conflictos, se resuelven en el PR y no rompen el automatismo.
 # ============================================================================
 
 on:
   schedule:
-    # Cada lunes a las 06:00 UTC. En horario peninsular espanol:
-    #   verano (CEST, UTC+2): 08:00
-    #   invierno (CET,  UTC+1): 07:00
+    # Cada lunes a las 06:00 UTC (08:00 CEST verano / 07:00 CET invierno).
     - cron: '0 6 * * 1'
   workflow_dispatch:
-    # Permite lanzarlo manualmente desde la pestana Actions de GitHub.
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write    # necesario para hacer push al propio fork
-      issues: write      # necesario para crear el issue de notificacion
     steps:
-      - name: Checkout fork (con historial completo)
+      - name: Checkout fork (historial completo)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -45,79 +40,42 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Anadir remoto upstream
-        run: git remote add upstream https://github.com/betobetico/claude-para-abogados.git
+      - name: Anadir remoto upstream y fetch
+        run: |
+          git remote add upstream https://github.com/betobetico/claude-para-abogados.git
+          git fetch upstream
 
-      - name: Fetch upstream
-        run: git fetch upstream
-
-      - name: Comparar HEAD del fork con HEAD del upstream
+      - name: Comprobar novedades del upstream
         id: check
         run: |
-          UPSTREAM_SHA=$(git rev-parse upstream/main)
-          LOCAL_SHA=$(git rev-parse origin/main)
-          echo "Upstream main: $UPSTREAM_SHA"
-          echo "Fork main:     $LOCAL_SHA"
-          # Contar commits que existen en upstream/main pero NO en origin/main.
-          # Esto detecta solo cuando upstream tiene novedades reales, no cuando
-          # el fork tiene commits propios por delante (caso tipico: el propio
-          # workflow vive en el fork como commit local que el upstream no tiene).
           COMMITS_AHEAD=$(git rev-list origin/main..upstream/main --count)
-          echo "Commits nuevos en upstream no presentes en origin: $COMMITS_AHEAD"
+          echo "Commits nuevos en upstream no presentes en el fork: $COMMITS_AHEAD"
           if [ "$COMMITS_AHEAD" -gt 0 ]; then
-            echo "needs_update=true" >> $GITHUB_OUTPUT
-            echo "Upstream tiene $COMMITS_AHEAD commits nuevos. Procediendo a merge."
+            echo "needs_update=true" >> "$GITHUB_OUTPUT"
+            echo "El upstream tiene $COMMITS_AHEAD commits nuevos. Se preparara un PR."
           else
-            echo "needs_update=false" >> $GITHUB_OUTPUT
-            echo "Fork ya esta al dia con upstream (o el fork va por delante). No hay accion."
+            echo "needs_update=false" >> "$GITHUB_OUTPUT"
+            echo "El fork ya esta al dia con el upstream. Sin accion."
           fi
 
-      - name: Fast-forward merge de upstream/main
+      - name: Actualizar rama de sincronizacion
         if: steps.check.outputs.needs_update == 'true'
         run: |
-          git checkout main
-          git merge --ff-only upstream/main || {
-            echo "::error::Fast-forward imposible. El fork ha divergido del upstream."
-            echo "::error::Esto ocurre si has hecho commits propios sobre main en el fork."
-            echo "::error::Intervencion manual requerida. Workflow detenido."
-            exit 1
-          }
+          git branch -f upstream-sync upstream/main
+          git push --force origin upstream-sync
 
-      - name: Push a origin
+      - name: Abrir o actualizar Pull Request
         if: steps.check.outputs.needs_update == 'true'
-        run: git push origin main
-
-      - name: Crear issue de notificacion
-        if: steps.check.outputs.needs_update == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const date = new Date().toISOString().split('T')[0];
-            const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: `Fork sincronizado con upstream - ${date}`,
-              body: [
-                `El workflow automatico ha sincronizado este fork con \`betobetico/claude-para-abogados\`.`,
-                ``,
-                `**Fecha de sincronizacion:** ${date}`,
-                `**Ejecucion del workflow:** ${runUrl}`,
-                ``,
-                `### Proximos pasos`,
-                ``,
-                `1. Cuando tu PC este disponible, ejecuta el script local de sync:`,
-                `   \`\`\`powershell`,
-                `   C:\\Repos\\sync-repos.ps1`,
-                `   \`\`\``,
-                `   O espera al lunes siguiente a las 09:00 (Task Scheduler lo ejecutara solo).`,
-                ``,
-                `2. Revisa los commits incorporados desde la ultima sincronizacion.`,
-                ``,
-                `3. Este issue puede cerrarse manualmente tras la verificacion.`,
-                ``,
-                `---`,
-                `*Notificacion automatica generada por \`.github/workflows/sync-upstream.yml\`.*`
-              ].join('\n'),
-              labels: ['sync-upstream', 'automated']
-            });
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ABIERTOS=$(gh pr list --head upstream-sync --base main --state open --json number --jq 'length')
+          if [ "$ABIERTOS" -gt 0 ]; then
+            echo "Ya existe un PR abierto para upstream-sync; el push lo actualiza."
+          else
+            gh pr create \
+              --base main \
+              --head upstream-sync \
+              --title "Sync: novedades de betobetico/claude-para-abogados" \
+              --body "PR automatico generado por .github/workflows/sync-upstream.yml. Incorpora los commits nuevos del upstream. Revisa los cambios, resuelve conflictos si los hubiera y fusiona. Tus commits propios (workflow y marketplace.json) se conservan."
+          fi
